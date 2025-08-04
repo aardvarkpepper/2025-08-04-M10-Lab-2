@@ -14,7 +14,7 @@ prevPage(): A function to go to the previous page.
 canNextPage: Boolean indicating if there is a next page. // I think 'boolean' is the intent, not the Boolean constructor.
 canPrevPage: Boolean indicating if there is a previous page.
  */
-interface PaginationReturnValues {
+export interface PaginationReturnValues {
   currentPage: number;
   totalPages: number;
   startIndex: number;
@@ -34,7 +34,7 @@ interface PaginationReturnValues {
  * @param initialPage Page to start on.  Default 1.
  */
 
-const usePagination = (totalItems: number, itemsPerPage: number = 10, initialPage: number = 1): PaginationReturnValues => {
+export const usePagination = (totalItems: number, itemsPerPage: number = 10, initialPage: number = 1): PaginationReturnValues => {
   const [currentPage, setCurrentPage] = useState(initialPage);
 
   const totalPages = Math.max(Math.ceil(totalItems / itemsPerPage), 1); // if 0 items, still 1 page.
@@ -56,7 +56,7 @@ const usePagination = (totalItems: number, itemsPerPage: number = 10, initialPag
 
   const prevPage = (): void => {
     if (currentPage > 1) {
-      setCurrentPage(prev => prev = 1);
+      setCurrentPage(prev => prev - 1);
     }
   };
 
