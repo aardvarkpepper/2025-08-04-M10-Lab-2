@@ -1,5 +1,3 @@
-// note:  module 10 examples use function declarations, not constant assignations to anonymous functions.
-
 import { useEffect, useState } from 'react';
 
 /**
@@ -32,14 +30,39 @@ export interface PaginationReturnValues {
  * @param totalItems Total number of items to be paginated.
  * @param itemsPerPage Number of items to display per page.  Default 10.
  * @param initialPage Page to start on.  Default 1.
+ * @returns {currentPage, totalPages, startIndex, endIndex, itemsOnCurrentPage, setPage, nextPage, prevPage, canNextPage, canPrevPage} see comments in interface 'PaginationReturnValues'
  */
-
 export const usePagination = (totalItems: number, itemsPerPage: number = 10, initialPage: number = 1): PaginationReturnValues => {
   const [currentPage, setCurrentPage] = useState(initialPage);
 
-  const totalPages = Math.max(Math.ceil(totalItems / itemsPerPage), 1); // if 0 items, still 1 page.
-  let startIndex = (currentPage - 1) * itemsPerPage;
+  /**
+   * If itemsPerPage === 0, division by 0.  We won't be trying to render infinite pages that show nothing, so show default pages of 1.
+   * Technically, could test for itemsPerPage = Infinity, but supposedly this loads from an API, so there should never be infinite items.
+   * 
+   * If totalItems === 0, we won't be trying to render zero pages, so show default pages of 1.
+   * 
+   * Otherwise, calculate max page with Math.ceil(totalitems / itemsPerPage).  Presumably input validation prevents negative inputs.
+   */
+
+  let maxPage;
+  if (itemsPerPage === 0 || totalItems === 0) {
+    maxPage = 1;
+  } else {
+    maxPage = Math.ceil(totalItems / itemsPerPage);
+  }
+
+  const totalPages = maxPage; // reassigning values to totalPages could be confusing, so calculation first, then one assignation.
+  if (currentPage > totalPages) {
+    setCurrentPage(totalPages);
+  }
+
+  /**
+   * Below already handles if totalItems === 0 or if itemsPerPage === 0.
+   * However, '-1' values need to be handled at receiving end.
+   */
+  let startIndex = Math.min((currentPage - 1) * itemsPerPage, totalItems - 1);
   let endIndex = Math.min((currentPage * itemsPerPage) - 1, totalItems - 1);
+
   let itemsOnCurrentPage = (currentPage * itemsPerPage) > totalItems ? totalItems % itemsPerPage : itemsPerPage;
 
   const setPage = (pageNumber: number): void => {
@@ -69,7 +92,6 @@ export const usePagination = (totalItems: number, itemsPerPage: number = 10, ini
     return (currentPage > 1);
   };
 
-  // Test later to see if there's issues with method invocation.  Note must be invoked within a React Functional Component.
   return {
     currentPage,
     totalPages,
@@ -82,23 +104,4 @@ export const usePagination = (totalItems: number, itemsPerPage: number = 10, ini
     canNextPage,
     canPrevPage
   }
-  /**
-  
-  Ensure currentPage does not go below 1 or above totalPages.
-  
-  Create a component that uses your usePagination hook.
-  Simulate a list of items (e.g., an array of 100 numbers or strings).
-  Display the current page number, total pages, and the slice of items for the current page.
-  Include buttons for “Previous”, “Next”, and jumping to specific page numbers (if you wish to demonstrate setPage more thoroughly).
-  Disable Previous/Next buttons when canPrevPage or canNextPage is false.
-   */
-
-  // setPage(pageNumber: number): void;
-  // nextPage(pageNumber: number): void;
-  // canNextPage(): Boolean; // note:  see https://www.tutorialspoint.com/typescript/typescript_boolean.htm
-  // canPrevPage(): Boolean;} 
 }
-
-
-
-

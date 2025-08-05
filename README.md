@@ -1,3 +1,7 @@
+<p align="center">
+<img src="image.png" alt="Joke about 'breaking' code, referencing Ivan Drago from Rocky IV." width="600"/>
+</p>
+
 ## Resources
 
 https://www.typescriptlang.org/docs/handbook/2/generics.html#variance-annotations

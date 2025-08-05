@@ -1,27 +1,20 @@
-import { useState } from 'react';
 import { usePagination } from '../../customHooks/usePagination.ts';
+interface PaginationDemoProps {
+  totalItems: number;
+  itemsPerPage: number;
+  initialPage: number;
+}
 
-// export interface PaginationReturnValues {
-//   currentPage: number;
-//   totalPages: number;
-//   startIndex: number;
-//   endIndex: number;
-//   itemsOnCurrentPage: number;
-//   setPage(pageNumber: number): void;
-//   nextPage(): void;
-//   prevPage(): void;
-//   canNextPage(): boolean; // note:  see https://www.tutorialspoint.com/typescript/typescript_boolean.htm
-//   canPrevPage(): boolean;
-// }
-
-//export const usePagination = (totalItems: number, itemsPerPage: number = 10, initialPage: number = 1): PaginationReturnValues => {
-
-export const PaginationDemo: React.FunctionComponent = (): React.ReactNode => {
+export const PaginationDemo: React.FunctionComponent<PaginationDemoProps> = ({totalItems, itemsPerPage, initialPage}: PaginationDemoProps): React.ReactNode => {
   const data = {
-    totalItems: 43,
-    itemsPerPage: 10,
-    initialPage: 2,
+    totalItems,
+    itemsPerPage,
+    initialPage,
   }
+
+  /**
+   * For this and 'generateArray', for API would use dataArray.slice(startIndex, endIndex) (or whatever the syntax is) instead of a for loop to generate the array to be rendered.
+   */
   const generatePagesArray = (dataInput = data) => {
     const returnArray = [];
     const pageCount = Math.max(1, Math.ceil(dataInput.totalItems / dataInput.itemsPerPage))
@@ -31,8 +24,8 @@ export const PaginationDemo: React.FunctionComponent = (): React.ReactNode => {
     return returnArray;
   }
 
-
   const paginationData = usePagination(data.totalItems, data.itemsPerPage, data.initialPage);
+
   const generateArray = (start = paginationData.startIndex, end = paginationData.endIndex) => {
     const returnArray = []
     for (let i = start; i <= end; i++) {
@@ -41,12 +34,11 @@ export const PaginationDemo: React.FunctionComponent = (): React.ReactNode => {
     return returnArray;
   }
 
-  // Instead of 'for' loop, would run array.slice(startIndex, endIndex).map (or whatever the syntax on .slice is) on data.
   return (
-    <div>
+    <div className='pagination'>
       <h2>Pagination Demo</h2>
       <div>
-        Using data totalItems = 211, itemsPerPage = 10, initialPage = 2
+        Using data totalItems = {data.totalItems}, itemsPerPage = {data.itemsPerPage}, initialPage = {data.initialPage};
       </div>
       <br />
       <div>
@@ -54,15 +46,15 @@ export const PaginationDemo: React.FunctionComponent = (): React.ReactNode => {
         <div>Total items: {data.totalItems}</div>
       </div>
       <ul>
-        {(generateArray() as any).map((element: any) => <div key={element.description}>{element.index}. {element.description}</div>)}
+        {(paginationData.startIndex >= 0 && paginationData.endIndex >= 0) ? (generateArray() as any).map((element: any) => <div key={element.description}>{element.index}. {element.description}</div>) : null}
       </ul>
       <div className='flexh jc-spacebetween'>
-        <button onClick={paginationData.prevPage}>Previous</button>
+        <button onClick={paginationData.prevPage} disabled={!paginationData.canPrevPage()}>Previous</button>
         <div>Page {paginationData.currentPage} of {paginationData.totalPages}</div>
-        <button onClick={paginationData.nextPage}>Next</button>
+        <button onClick={paginationData.nextPage} disabled={!paginationData.canNextPage()}>Next</button>
       </div>
       <div>
-        Showing items {paginationData.startIndex + 1} - {paginationData.endIndex + 1} (Total on this page: {paginationData.itemsOnCurrentPage})
+        {(data.totalItems > 0 && data.itemsPerPage > 0) ? `Showing items ${paginationData.startIndex + 1} - ${paginationData.endIndex + 1} (Total on this page: ${paginationData.itemsOnCurrentPage})` : null}
       </div>
       <div>
         {(generatePagesArray() as any).map((element: any) => <button key={`button-page-${element}`} onClick={() => paginationData.setPage(element)}>{element}</button>)}
