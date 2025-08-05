@@ -13,16 +13,6 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_objec
 https://developer.mozilla.org/en-US/docs/Web/API/FormData/get
 https://react.dev/reference/react-dom/components/form
 
-import { useState, useEffect } from 'react';
+## Notes
 
-interface FetchObject<T> {
-  data: T;
-  loading: boolean;
-  error: Error | null;
-}
-
-const useFetch = <T>(urlString: string, RequestInit ?: object): FetchObject<T> => {
-
-
-  return {data: 2 as any, loading: true, error: null};
-}
+React documentation indicates using 'action' property on form element that uses async.
