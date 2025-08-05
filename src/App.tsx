@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './App.css';
 import { PaginationDemo } from './components/PaginationDemo/PaginationDemo';
+import { DebounceDemo } from './components/DebounceDemo/DebounceDemo';
 
 function App() {
   const [theme, setTheme] = useState('dark');
@@ -38,6 +39,7 @@ function App() {
   return (
     <div className={`${theme} container`}>
       <button onClick={handleTheme}>{`Toggle ${theme} off`}</button>
+      <DebounceDemo />
       {paginationDemoData.map((element, index) => <PaginationDemo key={index} totalItems={element.totalItems} itemsPerPage = {element.itemsPerPage} initialPage = {element.initialPage}/>)}
     </div>
   )

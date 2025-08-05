@@ -7,11 +7,11 @@ body {
   color: lightcyan;
 }
 
-.pagination:nth-child(even) {
+.pagination:nth-child(odd) {
   background-color: lightblue;
 }
 
-.dark .pagination:nth-child(even) {
+.dark .pagination:nth-child(odd) {
   background-color: darkblue;
 }
 

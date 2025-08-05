@@ -26,5 +26,5 @@ You can simulate an API call or filtering action whenever the debouncedValue cha
 import { useEffect, useState } from 'react';
 
 const useDebounce = (value: any, delay: number) => {
-
+  const [debounceData, setDebounceData] = useState(value);
 }
